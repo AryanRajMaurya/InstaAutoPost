@@ -17,8 +17,10 @@ class Media(OriginalMedia):
 
 # Function to create an image with the content
 def create_image_with_content(content_data):
-    color_picker = (1, 31, 102)
-    img = Image.new('RGB', (800, 800), color=color_picker)
+    image_path = random.choice(os.listdir("aryan"))  # Choose random image from "aryan" folder
+    image_path = os.path.join("aryan", image_path)
+    img = Image.open(image_path)  # Open the image
+
     draw = ImageDraw.Draw(img)
 
     # Extract content parts
@@ -31,10 +33,10 @@ def create_image_with_content(content_data):
     font_heading = ImageFont.truetype(font_path, size=30)  
     font_content = ImageFont.truetype(font_path, size=22)  
 
-    # Positions in the image
+    # Positions in the image (adjust as needed for different image sizes)
     heading_position = (50, 50)
     content_position = (50, 100)
-    caption_position = (50, 550)
+    caption_position = (50, img.height - 100)  # Dynamically position caption
 
     # Multiple lines for content
     max_line_length = 50
@@ -133,6 +135,4 @@ model = genai.GenerativeModel(
   generation_config=generation_config,
 )
 
-# Example of using the model (can be removed)
-# response = model.generate_text(prompt="Write a short poem about the ocean.")
 # print(response.text)
