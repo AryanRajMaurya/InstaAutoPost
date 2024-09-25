@@ -83,7 +83,7 @@ def post_to_instagram():
 
     client = Client()
     client.login(user_name, password)
-    client.photo_upload(jpg_image_path, caption=" ")
+    client.photo_upload(jpg_image_path, caption=f"{image_caption}\n{hashtags}")  # Use caption and hashtags
 
 # Generate content using Gemini API
 def get_content():
