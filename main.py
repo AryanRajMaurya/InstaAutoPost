@@ -21,36 +21,51 @@ def create_image_with_content(content_data):
     image_path = os.path.join("aryan", image_path)
     img = Image.open(image_path)  # Open the image
 
+    # Crop to square for Instagram
+    width, height = img.size
+    min_dimension = min(width, height)
+    left = (width - min_dimension) // 2
+    top = (height - min_dimension) // 2
+    right = left + min_dimension
+    bottom = top + min_dimension
+    img = img.crop((left, top, right, bottom))
+    img = img.resize((1080, 1080))  # Resize to 1080x1080
+
     draw = ImageDraw.Draw(img)
 
     # Extract content parts
     heading = content_data.get('heading', '')
     main_content = content_data.get('main_content', '')
-    image_caption = content_data.get('image_caption', '')
-    hashtags = content_data.get('hashtags', '')
 
     font_path = "fonts/Neuton-Regular.ttf"
     font_heading = ImageFont.truetype(font_path, size=30)  
     font_content = ImageFont.truetype(font_path, size=22)  
 
-    # Positions in the image (adjust as needed for different image sizes)
+    # Positions in the image (adjust as needed)
     heading_position = (50, 50)
     content_position = (50, 100)
-    caption_position = (50, img.height - 100)  # Dynamically position caption
 
     # Multiple lines for content
     max_line_length = 50
     content_lines = textwrap.wrap(main_content, width=max_line_length)
-    
-    # Adding it to an image
-    draw.text(heading_position, heading, font=font_heading, fill='white')
+
+    # Draw transparent square block (adjust size and position)
+    block_width = 700
+    block_height = 400
+    block_left = (img.width - block_width) // 2
+    block_top = (img.height - block_height) // 2
+    draw.rectangle(
+        [(block_left, block_top), (block_left + block_width, block_top + block_height)],
+        fill=(255, 255, 255, 150),  # White with 150 opacity (semi-transparent)
+    )
+
+    # Adding text to the image
+    draw.text(heading_position, heading, font=font_heading, fill='black')
     for i, line in enumerate(content_lines):
         if i == 0:
-            draw.text((content_position[0], content_position[1] + i*35), line, font=font_content, fill='white')
+            draw.text((content_position[0], content_position[1] + i*35), line, font=font_content, fill='black')
         else:
-            draw.text((content_position[0], content_position[1] + i*35), line, font=font_content, fill='white')
-
-    draw.text(caption_position, image_caption + " " + hashtags, font=font_content, fill='white')
+            draw.text((content_position[0], content_position[1] + i*35), line, font=font_content, fill='black')
 
     img.save("random_content.png")
 
@@ -134,5 +149,3 @@ model = genai.GenerativeModel(
   model_name="gemini-1.5-flash",
   generation_config=generation_config,
 )
-
-# print(response.text)
