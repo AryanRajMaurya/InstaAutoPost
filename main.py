@@ -31,7 +31,6 @@ model = genai.GenerativeModel(
 class Media(OriginalMedia):
     pk: Union[str, int]
 
-
 def create_image_with_content(content_data):
     image_path = random.choice(os.listdir("aryan"))  # Choose random image from "aryan" folder
     image_path = os.path.join("aryan", image_path)
@@ -59,6 +58,10 @@ def create_image_with_content(content_data):
 
     # Calculate text dimensions
     heading_width, heading_height = draw.textsize(heading, font=font_heading)
+
+    # Calculate content lines before the loop
+    max_line_length = 50
+    content_lines = textwrap.wrap(main_content, width=max_line_length)
     total_content_height = sum([draw.textsize(line, font=font_content)[1] for line in content_lines])
     total_content_height += (len(content_lines) - 1) * 35  # Account for line spacing
 
