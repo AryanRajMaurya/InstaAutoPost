@@ -102,12 +102,6 @@ def get_content():
                     "Okay, I'm ready to be your autopost bot for @the.verse.weaver! Just tell me when you want some \"content\" and I'll generate a random post for you following the format you provided. Let's weave some captivating stories together! \n\nARM, please let me know whenever you need a new post and I'll be happy to create something engaging. \n",
                 ],
             },
-            {
-                "role": "user",
-                "parts": [
-                    "content\n",
-                ],
-            },
         ]
     )
 
