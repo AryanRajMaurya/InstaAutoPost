@@ -86,7 +86,7 @@ def create_image_with_content(content_data):
     img.save("random_content.png")
 
 # Automate posts on Instagram
-def post_to_instagram():
+def post_to_instagram(content_data):  # Pass content_data to this function
     user_name = os.getenv('INSTAGRAM_USERNAME')
     password = os.getenv('INSTAGRAM_PASSWORD')
 
@@ -99,7 +99,7 @@ def post_to_instagram():
 
     client = Client()
     client.login(user_name, password)
-    client.photo_upload(jpg_image_path, caption=f"{image_caption}\n{hashtags}")  # Use caption and hashtags
+    client.photo_upload(jpg_image_path, caption=f"{content_data['image_caption']}\n{content_data['hashtags']}")  # Use caption and hashtags from content_data
 
 # Generate content using Gemini API
 def get_content():
