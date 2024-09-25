@@ -47,6 +47,9 @@ def create_image_with_content(content_data):
     img = img.crop((left, top, right, bottom))
     img = img.resize((1080, 1080))  # Resize to 1080x1080
 
+    # Convert to RGBA mode 
+    img = img.convert("RGBA") 
+
     draw = ImageDraw.Draw(img)
 
     # Extract content parts
@@ -112,8 +115,7 @@ def create_image_with_content(content_data):
         line_center_y = content_center_y + i * (line_height + 35)
         draw.text((line_center_x, line_center_y), line, font=font_content, fill='black', anchor='mm')  # Center align content lines
 
-    img.save("random_content.png")
-  
+    img.save("random_content.png")  
 """
 def create_image_with_content(content_data):
     image_path = random.choice(os.listdir("aryan"))  # Choose random image from "aryan" folder
