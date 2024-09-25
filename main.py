@@ -31,6 +31,7 @@ model = genai.GenerativeModel(
 class Media(OriginalMedia):
     pk: Union[str, int]
 
+
 def create_image_with_content(content_data):
     image_path = random.choice(os.listdir("aryan"))  # Choose random image from "aryan" folder
     image_path = os.path.join("aryan", image_path)
@@ -94,7 +95,14 @@ def create_image_with_content(content_data):
     watermark_center_y = block_top + block_height // 2 - watermark_height // 2
     # Choose random color for watermark
     random_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-    draw.text((watermark_center_x, watermark_center_y), watermark_text, font=watermark_font, fill=random_color, anchor='mm', alpha=40)  # Semi-transparent watermark
+
+    # Create a new transparent image with watermark text
+    watermark_img = Image.new("RGBA", (block_width, block_height), (0, 0, 0, 0))  # Transparent background
+    watermark_draw = ImageDraw.Draw(watermark_img)
+    watermark_draw.text((watermark_center_x, watermark_center_y), watermark_text, font=watermark_font, fill=random_color, anchor='mm')
+
+    # Paste the watermark image onto the main image using alpha blending
+    img.alpha_composite(watermark_img, (block_left, block_top))
 
     # Adding text to the image
     draw.text((heading_center_x, heading_center_y), heading, font=font_heading, fill='black', anchor='mm')  # Center align heading
@@ -105,7 +113,7 @@ def create_image_with_content(content_data):
         draw.text((line_center_x, line_center_y), line, font=font_content, fill='black', anchor='mm')  # Center align content lines
 
     img.save("random_content.png")
-
+  
 """
 def create_image_with_content(content_data):
     image_path = random.choice(os.listdir("aryan"))  # Choose random image from "aryan" folder
