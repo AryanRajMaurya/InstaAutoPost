@@ -13,6 +13,21 @@ from typing import Union
 
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
+# Create the model (adjust settings as needed)
+generation_config = {
+  "temperature": 1.7,
+  "top_p": 0.95,
+  "top_k": 64,
+  "max_output_tokens": 8192,
+  "response_mime_type": "text/plain",
+}
+
+model = genai.GenerativeModel(
+  model_name="gemini-1.5-flash",
+  generation_config=generation_config,
+)
+
+
 class Media(OriginalMedia):
     pk: Union[str, int]
 
@@ -130,17 +145,3 @@ while True:
     create_image_with_content(content_data)
     post_to_instagram()
     time.sleep(7200) # Sleep for 2 hours (7200 seconds)
-
-# Create the model (adjust settings as needed)
-generation_config = {
-  "temperature": 1.7,
-  "top_p": 0.95,
-  "top_k": 64,
-  "max_output_tokens": 8192,
-  "response_mime_type": "text/plain",
-}
-
-model = genai.GenerativeModel(
-  model_name="gemini-1.5-flash",
-  generation_config=generation_config,
-)
