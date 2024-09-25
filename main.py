@@ -53,6 +53,82 @@ def create_image_with_content(content_data):
     main_content = content_data.get('main_content', '')
 
     font_path = "fonts/Neuton-Regular.ttf"
+    font_heading = ImageFont.truetype(font_path, size=45)  # 1.5x bigger
+    font_content = ImageFont.truetype(font_path, size=33)  # 1.5x bigger
+    watermark_font = ImageFont.truetype(font_path, size=200)  # Very big watermark
+
+    # Calculate text dimensions
+    heading_width, heading_height = draw.textsize(heading, font=font_heading)
+
+    # Calculate content lines before the loop
+    max_line_length = 50
+    content_lines = textwrap.wrap(main_content, width=max_line_length)
+    total_content_height = sum([draw.textsize(line, font=font_content)[1] for line in content_lines])
+    total_content_height += (len(content_lines) - 1) * 35  # Account for line spacing
+
+    # Determine block width and height based on text 
+    block_width = max(heading_width, max([draw.textsize(line, font=font_content)[0] for line in content_lines])) + 50  # Add padding
+    block_height = heading_height + total_content_height + 50  # Add padding
+
+    # Calculate block position to center it
+    block_left = (img.width - block_width) // 2
+    block_top = (img.height - block_height) // 2
+
+    # Calculate text positions for centering
+    heading_center_x = block_left + block_width // 2 - heading_width // 2
+    heading_center_y = block_top + heading_height // 2
+
+    content_center_x = block_left + block_width // 2
+    content_center_y = block_top + heading_height + 25  # Add spacing between heading and content
+
+    # Draw transparent square block
+    draw.rectangle(
+        [(block_left, block_top), (block_left + block_width, block_top + block_height)],
+        fill=(255, 255, 255, 20),  # White with 20 opacity (more transparent)
+    )
+
+    # Add watermark text
+    watermark_text = "ARM"
+    watermark_width, watermark_height = draw.textsize(watermark_text, font=watermark_font)
+    watermark_center_x = block_left + block_width // 2 - watermark_width // 2
+    watermark_center_y = block_top + block_height // 2 - watermark_height // 2
+    # Choose random color for watermark
+    random_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+    draw.text((watermark_center_x, watermark_center_y), watermark_text, font=watermark_font, fill=random_color, anchor='mm', alpha=40)  # Semi-transparent watermark
+
+    # Adding text to the image
+    draw.text((heading_center_x, heading_center_y), heading, font=font_heading, fill='black', anchor='mm')  # Center align heading
+    for i, line in enumerate(content_lines):
+        line_width, line_height = draw.textsize(line, font=font_content)
+        line_center_x = content_center_x - line_width // 2
+        line_center_y = content_center_y + i * (line_height + 35)
+        draw.text((line_center_x, line_center_y), line, font=font_content, fill='black', anchor='mm')  # Center align content lines
+
+    img.save("random_content.png")
+
+"""
+def create_image_with_content(content_data):
+    image_path = random.choice(os.listdir("aryan"))  # Choose random image from "aryan" folder
+    image_path = os.path.join("aryan", image_path)
+    img = Image.open(image_path)  # Open the image
+
+    # Crop to square for Instagram
+    width, height = img.size
+    min_dimension = min(width, height)
+    left = (width - min_dimension) // 2
+    top = (height - min_dimension) // 2
+    right = left + min_dimension
+    bottom = top + min_dimension
+    img = img.crop((left, top, right, bottom))
+    img = img.resize((1080, 1080))  # Resize to 1080x1080
+
+    draw = ImageDraw.Draw(img)
+
+    # Extract content parts
+    heading = content_data.get('heading', '')
+    main_content = content_data.get('main_content', '')
+
+    font_path = "fonts/Neuton-Regular.ttf"
     font_heading = ImageFont.truetype(font_path, size=30)  
     font_content = ImageFont.truetype(font_path, size=22)  
 
@@ -97,63 +173,6 @@ def create_image_with_content(content_data):
     img.save("random_content.png")
 
 """
-def create_image_with_content(content_data):
-    image_path = random.choice(os.listdir("aryan"))  # Choose random image from "aryan" folder
-    image_path = os.path.join("aryan", image_path)
-    img = Image.open(image_path)  # Open the image
-
-    # Crop to square for Instagram
-    width, height = img.size
-    min_dimension = min(width, height)
-    left = (width - min_dimension) // 2
-    top = (height - min_dimension) // 2
-    right = left + min_dimension
-    bottom = top + min_dimension
-    img = img.crop((left, top, right, bottom))
-    img = img.resize((1080, 1080))  # Resize to 1080x1080
-
-    draw = ImageDraw.Draw(img)
-
-    # Extract content parts
-    heading = content_data.get('heading', '')
-    main_content = content_data.get('main_content', '')
-
-    font_path = "fonts/Neuton-Regular.ttf"
-    font_heading = ImageFont.truetype(font_path, size=30)  
-    font_content = ImageFont.truetype(font_path, size=22)  
-
-    # Calculate text dimensions
-    heading_width, heading_height = draw.textsize(heading, font=font_heading)
-    total_content_height = sum([draw.textsize(line, font=font_content)[1] for line in content_lines])
-    total_content_height += (len(content_lines) - 1) * 35  # Account for line spacing
-
-    # Calculate center positions for heading and content
-    heading_center_x = img.width // 2 - heading_width // 2
-    heading_center_y = img.height // 2 - heading_height // 2 - total_content_height // 2
-    content_center_x = img.width // 2
-    content_center_y = img.height // 2 + total_content_height // 2
-
-    # Draw transparent square block (adjust size and position)
-    block_width = 700
-    block_height = 400
-    block_left = (img.width - block_width) // 2
-    block_top = (img.height - block_height) // 2
-    draw.rectangle(
-        [(block_left, block_top), (block_left + block_width, block_top + block_height)],
-        fill=(255, 255, 255, 50),  # White with 100 opacity (more transparent)
-    )
-
-    # Adding text to the image
-    draw.text((heading_center_x, heading_center_y), heading, font=font_heading, fill='black', anchor='mm')  # Center align heading
-    for i, line in enumerate(content_lines):
-        line_width, line_height = draw.textsize(line, font=font_content)
-        line_center_x = content_center_x - line_width // 2
-        line_center_y = content_center_y + i * (line_height + 35) - total_content_height // 2
-        draw.text((line_center_x, line_center_y), line, font=font_content, fill='black', anchor='mm')  # Center align content lines
-
-    img.save("random_content.png")
-"""
-
 # Automate posts on Instagram
 def post_to_instagram(content_data):  # Pass content_data to this function
     user_name = os.getenv('INSTAGRAM_USERNAME')
