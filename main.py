@@ -8,6 +8,7 @@ import random
 import textwrap
 from instagrapi import Client
 import time
+from instagrapi.types import Media as OriginalMedia
 from typing import Union
 
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
