@@ -143,5 +143,5 @@ def get_content():
 while True:
     content_data = get_content()
     create_image_with_content(content_data)
-    post_to_instagram()
+    post_to_instagram(content_data)
     time.sleep(7200) # Sleep for 2 hours (7200 seconds)
