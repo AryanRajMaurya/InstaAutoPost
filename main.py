@@ -72,7 +72,7 @@ def create_image_with_content(content_data):
     block_top = (img.height - block_height) // 2
     draw.rectangle(
         [(block_left, block_top), (block_left + block_width, block_top + block_height)],
-        fill=(255, 255, 255, 150),  # White with 150 opacity (semi-transparent)
+        fill=(255, 255, 255, 90),  # White with 150 opacity (semi-transparent)
     )
 
     # Adding text to the image
