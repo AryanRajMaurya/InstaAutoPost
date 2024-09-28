@@ -59,7 +59,7 @@ def create_image_with_content(content_data):
     font_path = "fonts/Neuton-Regular.ttf"
     font_heading = ImageFont.truetype(font_path, size=45)  # 1.5x bigger
     font_content = ImageFont.truetype(font_path, size=33)  # 1.5x bigger
-    watermark_font = ImageFont.truetype(font_path, size=60)  # Watermark font size
+    watermark_font = ImageFont.truetype(font_path, size=20)  # Watermark font size
 
     # Calculate text dimensions
     heading_width, heading_height = draw.textsize(heading, font=font_heading)
