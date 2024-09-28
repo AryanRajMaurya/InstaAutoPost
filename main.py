@@ -149,17 +149,31 @@ def create_image_with_content(content_data):
     font_heading = ImageFont.truetype(font_path, size=45)  # 1.5x bigger
     font_content = ImageFont.truetype(font_path, size=33)  # 1.5x bigger
     watermark_font = ImageFont.truetype(font_path, size=200)  # Very big watermark
+
+    ascent, descent = font_heading.getmetrics()
+    heading_width = font_heading.getmask(heading).getbbox()[2]  # Get width from bounding box
+    heading_height = ascent + descent  # Approximate height 
+
+    # Calculate content lines before the loop
+    max_line_length = 50
+    content_lines = textwrap.wrap(main_content, width=max_line_length)
+    total_content_height = 0  # Initialize total height
+    for line in content_lines:
+        ascent, descent = font_content.getmetrics()
+        line_width = font_content.getmask(line).getbbox()[2]  # Get width from bounding box
+        line_height = ascent + descent
+        total_content_height += line_height
+    total_content_height += (len(content_lines) - 1) * 35
   
-
+    """
     heading_width, heading_height = draw.textsize(heading, font=font_heading)
-
     # Calculate content lines before the loop
     max_line_length = 50
     content_lines = textwrap.wrap(main_content, width=max_line_length)
     total_content_height = sum([draw.textsize(line, font=font_content)[1] for line in content_lines])
     total_content_height += (len(content_lines) - 1) * 35  # Account for line spacing
 
-    """
+    
     # Calculate text dimensions
     heading_width, heading_height = font_heading.getsize(heading)  # Use getsize() method
 
