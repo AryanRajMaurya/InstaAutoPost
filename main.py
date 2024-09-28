@@ -182,7 +182,7 @@ def create_image_with_content(content_data):
 
     img.save("random_content.png")
 
-"""
+
 # Automate posts on Instagram
 def post_to_instagram(content_data):  # Pass content_data to this function
     user_name = os.getenv('INSTAGRAM_USERNAME')
@@ -198,6 +198,18 @@ def post_to_instagram(content_data):  # Pass content_data to this function
     client = Client()
     client.login(user_name, password)
     client.photo_upload(jpg_image_path, caption=f"{content_data['image_caption']}\n{content_data['hashtags']}")  # Use caption and hashtags from content_data
+"""
+
+def post_to_instagram(client, content_data):  
+    png_image_path = 'random_content.png'
+    jpg_image_path = 'random_content.jpg'
+
+    # PNG to JPEG
+    img = Image.open(png_image_path)
+    img.convert("RGB").save(jpg_image_path, "JPEG")
+
+    client.photo_upload(jpg_image_path, caption=f"{content_data['image_caption']}\n{content_data['hashtags']}")  # Use caption and hashtags from content_data
+
 
 # Generate content using Gemini API
 def get_content():
@@ -238,6 +250,20 @@ def get_content():
 
     return content_data
 
+if __name__ == "__main__":
+    user_name = os.getenv('INSTAGRAM_USERNAME')
+    password = os.getenv('INSTAGRAM_PASSWORD')
+
+    client = Client()  # Create the client object
+    client.login(user_name, password)  # Log in only once
+
+    while True:
+        content_data = get_content()
+        create_image_with_content(content_data)
+        post_to_instagram(client, content_data)  # Pass the client object
+        time.sleep(7200) # Sleep for 2 hours (7200 seconds)
+
+"""
 # Main loop for posting content every 2 hours
 while True:
     content_data = get_content()
@@ -245,3 +271,4 @@ while True:
     time.sleep(10)
     post_to_instagram(content_data)
     time.sleep(7200) # Sleep for 2 hours (7200 seconds)
+"""
