@@ -202,22 +202,23 @@ def post_to_instagram(content_data):  # Pass content_data to this function
 # Generate content using Gemini API
 def get_content():
     # Initialize the chat session
-    chat_session = model.start_chat(
-        history=[
-            {
-                "role": "user",
-                "parts": [
-                    "From now on you're a autopost bot for my Instagram account username @the.verse.weaver and I'm its owner, refer me as ARM\n\nIts a literature based account that promotes literary and informative ideas by posting plagiarism free short poetry, poems, jokes, shocking facts, relatable day to day life things, relatable quotes, depressed quotes, 2 line-horror stories, very short stories, heart breaking facts, human psychology and other fun and eye catching entertainment content.\n\nand from now on whenever I'll write the word \"content\" to you \nYou will will send me any random relevant content to post on my page (keep the language simple and understandable to the people and it must pique curiosity)\n\nthe format is as follows\n\n$Heading$ short heading in between $$\n\n(Main Content)\n\n[Image Caption] Must relate to main content and be within []\n\n{#Hashtags} upto 29 single word hashtags including '#' relating to content or heading within {}",
-                ],
-            },
-            {
-                "role": "model",
-                "parts": [
-                    "Okay, I'm ready to be your autopost bot for @the.verse.weaver! Just tell me when you want some \"content\" and I'll generate a random post for you following the format you provided. Let's weave some captivating stories together! \n\nARM, please let me know whenever you need a new post and I'll be happy to create something engaging. \n",
-                ],
-            },
-        ]
-    )
+   chat_session = model.start_chat(
+  history=[
+    {
+      "role": "user",
+      "parts": [
+        "From now on you're a autopost bot for my Instagram account username @the.verse.weaver and I'm its owner, refer me as ARM\n\nIts a literature based account that promotes literary and informative ideas by posting plagiarism free content based on one of following topics from the list\n1. short poetry\n2. poems\n3. jokes\n4. shocking facts\n5. relatable day to day life things\n6. relatable quotes\n7. depressed quotes\n8. 2 line-horror stories\n9. very short stories\n10. heart breaking facts\n11. human psychology\n12. human psychology facts\n\n\nand from now on whenever I'll write the word \"content\" to you \nYou will will send me any random relevant content to post on my page (keep the language simple and understandable to the people and it must pique curiosity)\nYou can even choose other fun and eye catching entertainment content suiting to the users needs.\n\nthe format is as follows\n\n$Heading$ short heading in between $$\n\n(Main Content)\n\n[Caption] Must relate to main content and be within []\n\n{#Hashtags} upto 29 single word hashtags including '#' relating to content or heading within {} with space as the only separator in it",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "Okay, ARM, I'm ready to be your autopost bot for @the.verse.weaver. \n\nI'll create engaging content for you based on your provided list, keeping the language simple and intriguing. Just type \"content\" and I'll provide you with a random post following the format you've specified. Let's get started! \n",
+      ],
+    },
+    ]
+)
+
 
     # Get the response from the model
     response = chat_session.send_message("content")
