@@ -146,9 +146,10 @@ def create_image_with_content(content_data):
     main_content = content_data.get('main_content', '')
 
     font_path = "fonts/Neuton-Regular.ttf"
-    font_heading = ImageFont.truetype(font_path, size=45)  # 1.5x bigger
+    font2 = "fonts/Roboto-Regular.ttf"
+    font_heading = ImageFont.truetype(font2, size=45)  # 1.5x bigger
     font_content = ImageFont.truetype(font_path, size=33)  # 1.5x bigger
-    watermark_font = ImageFont.truetype(font_path, size=200)  # Very big watermark
+    watermark_font = ImageFont.truetype(font_path, size=22)  # Very big watermark
 
     heading_width, heading_height = draw.textsize(heading, font=font_heading)
     # Calculate content lines before the loop
@@ -217,6 +218,7 @@ def create_image_with_content(content_data):
     watermark_text = "ARM"
     watermark_width, watermark_height = draw.textsize(watermark_text, font=watermark_font)
     watermark_center_x = block_left + block_width // 2 - watermark_width // 2
+    #watermark_center_y = block_top + block_height // 2 - watermark_height // 2
     watermark_center_y = block_top + block_height // 2 - watermark_height // 2
     # Choose random color for watermark
     random_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
