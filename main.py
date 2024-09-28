@@ -11,6 +11,8 @@ import time
 from instagrapi.types import Media as OriginalMedia
 from typing import Union
 
+from google.generativeai.types import HarmCategory, HarmBlockThreshold
+
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
 # Create the model (adjust settings as needed)
@@ -25,6 +27,12 @@ generation_config = {
 model = genai.GenerativeModel(
   model_name="gemini-1.5-flash",
   generation_config=generation_config,
+  safety_settings={
+        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+        HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
+        HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
+    }
 )
 
 
