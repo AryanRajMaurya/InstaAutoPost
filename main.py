@@ -91,29 +91,29 @@ def create_image_with_content(content_data):
     # Draw the corners
     draw.ellipse(
         [(block_left, block_top), (block_left + radius * 2, block_top + radius * 2)],
-        fill=(255, 255, 255, 20)
+        fill=(255, 255, 255, 5)
     )
     draw.ellipse(
         [(block_left + block_width - radius * 2, block_top), (block_left + block_width, block_top + radius * 2)],
-        fill=(255, 255, 255, 20)
+        fill=(255, 255, 255, 5)
     )
     draw.ellipse(
         [(block_left, block_top + block_height - radius * 2), (block_left + radius * 2, block_top + block_height)],
-        fill=(255, 255, 255, 20)
+        fill=(255, 255, 255, 5)
     )
     draw.ellipse(
         [(block_left + block_width - radius * 2, block_top + block_height - radius * 2), (block_left + block_width, block_top + block_height)],
-        fill=(255, 255, 255, 20)
+        fill=(255, 255, 255, 5)
     )
 
     # Draw the sides
     draw.rectangle(
         [(block_left + radius, block_top), (block_left + block_width - radius, block_top + block_height)],
-        fill=(255, 255, 255, 20)
+        fill=(255, 255, 255, 5)
     )
     draw.rectangle(
         [(block_left, block_top + radius), (block_left + block_width, block_top + block_height - radius)],
-        fill=(255, 255, 255, 20)
+        fill=(255, 255, 255, 5)
     )
 
     # Add watermark text at the middle bottom of the block
