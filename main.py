@@ -57,8 +57,9 @@ def create_image_with_content(content_data):
     main_content = content_data.get('main_content', '')
 
     font_path = "fonts/Neuton-Regular.ttf"
+    font2 = "fonts/Roboto-Regular.ttf"
     font_heading = ImageFont.truetype(font_path, size=45)  # 1.5x bigger
-    font_content = ImageFont.truetype(font_path, size=33)  # 1.5x bigger
+    font_content = ImageFont.truetype(font2, size=33)  # 1.5x bigger
     watermark_font = ImageFont.truetype(font_path, size=20)  # Watermark font size
 
     # Calculate text dimensions
