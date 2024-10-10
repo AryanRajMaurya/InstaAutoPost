@@ -340,7 +340,7 @@ def generate_quote():
     quote['author'] = lines[2].strip("- ").strip()
     return quote
 
-def create_and_post_reel(client, content_data):
+def create_and_post_reel(client):
     # Create the image video
     image_video = create_image_video(images_folder, num_images, time_per_image, video_size)
 
