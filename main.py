@@ -165,7 +165,7 @@ def post_to_instagram(client, content_data):
     img = Image.open(png_image_path)
     img.convert("RGB").save(jpg_image_path, "JPEG")
 
-    client.photo_upload(jpg_image_path, caption=f"{content_data['image_caption']}\n{content_data['hashtags']}")  # Use caption and hashtags from content_data
+    #client.photo_upload(jpg_image_path, caption=f"{content_data['image_caption']}\n{content_data['hashtags']}")  # Use caption and hashtags from content_data
 
     max_retries = 3  # Set maximum number of retries
     retries = 0
