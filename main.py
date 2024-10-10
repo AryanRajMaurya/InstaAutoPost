@@ -238,7 +238,7 @@ def get_content():
         return None  # Or handle the failure in another way
 
 
-chat_session = model.start_chat(
+chat_session2 = model.start_chat(
   history=[
     {
       "role": "user",
@@ -329,8 +329,8 @@ chat_session = model.start_chat(
 
 
 def generate_quote():
-    global quote_chat_session  # Access the global chat session
-    response = quote_chat_session.send_message("bazinga")
+    #global chat_session2  # Access the global chat session
+    response = chat_session2.send_message("bazinga")
     quote_text = response.text.strip()
 
     # Extract quote, author, and image suggestion
