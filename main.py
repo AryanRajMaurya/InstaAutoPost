@@ -10,6 +10,9 @@ from instagrapi import Client
 import time
 from instagrapi.types import Media as OriginalMedia
 from typing import Union
+from tools import create_image_video, create_text_video
+from moviepy.editor import CompositeVideoClip, AudioFileClip
+from pathlib import Path
 
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
@@ -31,6 +34,26 @@ model = genai.GenerativeModel(
 class Media(OriginalMedia):
     pk: Union[str, int]
 
+images_folder = 'images'
+audio_folder = 'music'
+output_video = 'output_video.mp4'
+time_per_image = 0.15
+num_images = 30
+video_size = (1080, 1920)
+
+# Text styling variables
+font_path_quote = "fonts/SitkaB.ttc"
+font_path_author = "fonts/BRITANIC.TTF"
+font_path_watermark = "fonts/arial.ttf"
+text_color = (255, 255, 255)
+border_color = (0, 0, 0)
+border_width = 6
+line_spacing = 20
+fontsize_quote = 70
+fontsize_author = 50
+fontsize_watermark = 50
+margin_between_quote_and_author = 40
+username = "the.verse.weaver"
 
 def create_image_with_content(content_data):
     image_path = random.choice(os.listdir("aryan"))  # Choose random image from "aryan" folder
@@ -194,6 +217,46 @@ def get_content():
         print(f"Failed to get content from Gemini after {max_retries} retries.")
         return None  # Or handle the failure in another way
     
+def create_and_post_reel(client, content_data):
+    # Create the image video
+    image_video = create_image_video(images_folder, num_images, time_per_image, video_size)
+
+    # Generate a quote using Gemini
+    quote = generate_quote()
+
+    # Create the text video
+    text_clip = create_text_video(video_size, quote, font_path_quote, font_path_author, font_path_watermark,
+                                  text_color, border_color, border_width, line_spacing,
+                                  fontsize_quote, fontsize_author, fontsize_watermark, 
+                                  margin_between_quote_and_author, username)
+
+    text_clip = text_clip.set_position(("center", "center"), relative=True).set_duration(image_video.duration)
+
+    # Combine the image video with the text video
+    final_video = CompositeVideoClip([image_video, text_clip])
+
+    # Get a random audio file from the audio folder
+    audio_files = os.listdir(audio_folder)
+    random_audio_file = random.choice(audio_files)
+    audio_path = os.path.join(audio_folder, random_audio_file)
+
+    # Load the audio file
+    audio_clip = AudioFileClip(audio_path)
+
+    # Adjust audio duration to match video duration
+    audio_clip = audio_clip.subclip(0, final_video.duration)
+
+    # Set the audio for the final video
+    final_video = final_video.set_audio(audio_clip)
+
+    # Write the final video to a file
+    final_video.write_videofile(output_video, fps=24)
+
+    # Post the reel using instagrapi
+    caption = "✨✨ @the.verse.weaver" 
+    track = client.music_search(query="Inspiring Music", amount=1)[0]  # Search for a suitable track
+    client.clip_upload_as_reel_with_music(Path(output_video), caption, track) 
+
 
 if __name__ == "__main__":
     user_name = os.getenv('INSTAGRAM_USERNAME')
