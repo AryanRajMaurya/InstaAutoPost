@@ -167,6 +167,26 @@ def post_to_instagram(client, content_data):
 
     client.photo_upload(jpg_image_path, caption=f"{content_data['image_caption']}\n{content_data['hashtags']}")  # Use caption and hashtags from content_data
 
+    max_retries = 3  # Set maximum number of retries
+    retries = 0
+    while retries < max_retries:
+        try:
+            client.photo_upload(jpg_image_path, caption=f"{content_data['image_caption']}\n{content_data['hashtags']}")
+            print("Post successful!")
+            break  # Exit the loop if successful
+        except Exception as e:  # Catch any exception
+            retries += 1
+            print(f"Error posting to Instagram: {e}. Retrying ({retries}/{max_retries})...")
+            get_content()
+            create_image_with_content(content_data)
+            post_to_instagram(client, content_data)
+            time.sleep(60)  # Wait for 60 seconds before retrying
+
+    if retries == max_retries:
+        print(f"Failed to post to Instagram after {max_retries} retries.")
+        
+
+
 
 
 def get_content():
