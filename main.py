@@ -216,7 +216,110 @@ def get_content():
     if retries == max_retries:
         print(f"Failed to get content from Gemini after {max_retries} retries.")
         return None  # Or handle the failure in another way
-    
+
+
+chat_session = model.start_chat(
+  history=[
+    {
+      "role": "user",
+      "parts": [
+        "youre a reel poster bot for @the.verse.weaver and u generates quotes like the following and in same format but one at a time whenever i say my magic word that is \"bazinga\"\n\nquotes = [\n{\"content\": \"The best time to plant a tree was 20 years ago. The second best time is now.\", \"author\": \"Chinese Proverb\"},\n{\"content\": \"An unexamined life is not worth living.\", \"author\": \"Socrates\"},\n{\"content\": \"Eighty percent of success is showing up.\", \"author\": \"Woody Allen\"},\n{\"content\": \"Your time is limited, so don’t waste it living someone else’s life.\", \"author\": \"Steve Jobs\"},\n{\"content\": \"The only way to do great work is to love what you do.\", \"author\": \"Steve Jobs\"},\n]\n\nif the quote has no author and is widely known write the author as unknown and if the quote is plagiarism free then author should be the.verse.weaver",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "Okay, I'm ready to weave some quote magic!  Just say \"**bazinga**\" and I'll create a reel-ready quote poster for @the.verse.weaver. ✨ \n",
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "bazinga\n",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "## \"The best time to plant a tree was 20 years ago. The second best time is now.\" \n\n- *Chinese Proverb*\n\n@the.verse.weaver \n\n(Image:  Choose an image related to nature, growth, or opportunity) \n",
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "bazinga\n",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "##  \"An unexamined life is not worth living.\"\n\n- *Socrates*\n\n@the.verse.weaver\n\n(Image: A thought-provoking image like a person deep in thought, a labyrinth, or a mirror) \n",
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "dont use my quotes but generate by yourself\n",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "Understood!  From now on, I'll be crafting original quotes for @the.verse.weaver.  \n\nHit me with that \"**bazinga**\" whenever you're ready for a fresh dose of inspiration. ✨ \n",
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "bazinga\n",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "##  \"The universe whispers in possibilities, it's up to you to shout back with action.\"\n\n- @the.verse.weaver\n\n(Image:  A striking image of a person shouting towards a vast starry sky, a hand reaching out to touch a galaxy, or something similarly inspiring) \n",
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "remove that image suggestion or whatever\n",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "Okay, I'll leave the image suggestions out. Just the quote from now on!\n\nLet me know when you're ready for another quote with \"bazinga\".  💫 \n",
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "bazinga\n",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "## \"Let your stumbles be stepping stones, your doubts be fuel for courage, and your scars be reminders of battles won.\"\n\n- @the.verse.weaver \n",
+      ],
+    },
+  ]
+)
+
+
+def generate_quote():
+    global quote_chat_session  # Access the global chat session
+    response = quote_chat_session.send_message("bazinga")
+    quote_text = response.text.strip()
+
+    # Extract quote, author, and image suggestion
+    quote = {}
+    lines = quote_text.splitlines()
+    quote['content'] = lines[0].strip("## ").strip()
+    quote['author'] = lines[2].strip("- ").strip()
+    return quote
+
 def create_and_post_reel(client, content_data):
     # Create the image video
     image_video = create_image_video(images_folder, num_images, time_per_image, video_size)
@@ -254,7 +357,7 @@ def create_and_post_reel(client, content_data):
 
     # Post the reel using instagrapi
     caption = "✨✨ @the.verse.weaver" 
-    track = client.music_search(query="Inspiring Music", amount=1)[0]  # Search for a suitable track
+    track = client.search_music(query="phonk Music", amount=1)[0]  # Search for a suitable track
     client.clip_upload_as_reel_with_music(Path(output_video), caption, track) 
 
 
@@ -268,5 +371,6 @@ if __name__ == "__main__":
     while True:
         content_data = get_content()
         create_image_with_content(content_data)
-        post_to_instagram(client, content_data)  # Pass the client object
+        post_to_instagram(client, content_data)
+        create_and_post_reel(client)
         time.sleep(7200) # Sleep for 2 hours (7200 seconds)
