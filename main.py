@@ -377,8 +377,8 @@ def create_and_post_reel(client):
 
     # Post the reel using instagrapi
     caption = "✨✨ @the.verse.weaver" 
-    track = client.search_music(query="phonk Music", amount=1)[0]  # Search for a suitable track
-    client.clip_upload_as_reel_with_music(Path(output_video), caption, track) 
+    #track = client.search_music(query="phonk Music", amount=1)[0]  # Search for a suitable track
+    client.clip_upload(Path(output_video), caption) 
 
 
 if __name__ == "__main__":
