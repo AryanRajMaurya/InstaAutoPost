@@ -1,3 +1,4 @@
+import asyncio
 import os
 import google.generativeai as genai
 from PIL import Image, ImageFont, ImageDraw
