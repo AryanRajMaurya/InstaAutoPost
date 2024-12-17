@@ -3,3 +3,4 @@ Pillow==7.1.2
 instagrapi
 google-generativeai
 moviepy
+edge-tts
