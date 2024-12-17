@@ -324,6 +324,18 @@ chat_session2 = model.start_chat(
         "## \"Let your stumbles be stepping stones, your doubts be fuel for courage, and your scars be reminders of battles won.\"\n\n- @the.verse.weaver \n",
       ],
     },
+    {
+      "role": "user",
+      "parts": [
+        "Whenever I'll write \"**cabinza**\" your task is to give 15 to 20 most relatable quote and reel hashtags related to content which may be motivation, poetry, success logic or any related general content and if its content is not clear add general reel and most trending hashtags. \n",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "Okay, I'm ready to generate the quote related hashtags! Just say \"**cabinza**\" and I'll add all most trending quote hashtags for @the.verse.weaver. ✨ \n",
+      ],
+    },
   ]
 )
 
