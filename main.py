@@ -13,6 +13,7 @@ from typing import Union
 from tools import create_image_video, create_text_video
 from moviepy.editor import CompositeVideoClip, AudioFileClip
 from pathlib import Path
+import edge_tts
 
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
@@ -339,6 +340,12 @@ chat_session2 = model.start_chat(
   ]
 )
 
+
+def generate_tts_audio(text, output_file):
+    """Generate TTS audio using Edge-TTS."""
+    communicate = edge_tts.Communicate(text, voice='en-US-BrianNeural', output_format='audio-16khz-32bit-mono-pcm')
+    with open(output_file, 'wb') as audio_file:
+        await communicate.save(audio_file)
 
 def generate_quote():
     #global chat_session2  # Access the global chat session
