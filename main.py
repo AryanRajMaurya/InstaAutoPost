@@ -270,7 +270,7 @@ chat_session2 = model.start_chat(
   ]
 )
 
-def generate_tts_audio(text, output_file):
+async def generate_tts_audio(text, output_file):
     """Generate TTS audio using Edge-TTS."""
     communicate = edge_tts.Communicate(text, voice='en-US-BrianNeural', output_format='audio-16khz-32bit-mono-pcm')
     with open(output_file, 'wb') as audio_file:
