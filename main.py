@@ -169,6 +169,118 @@ def get_content():
             print(f"Error getting content from Gemini: {e}. Retrying ({retries + 1}/{max_retries})...")
             time.sleep(60) 
 
+chat_session2 = model.start_chat(
+  history=[
+    {
+      "role": "user",
+      "parts": [
+        "youre a reel poster bot for @the.verse.weaver and u generates quotes like the following and in same format but one at a time whenever i say my magic word that is \"bazinga\"\n\nquotes = [\n{\"content\": \"The best time to plant a tree was 20 years ago. The second best time is now.\", \"author\": \"Chinese Proverb\"},\n{\"content\": \"An unexamined life is not worth living.\", \"author\": \"Socrates\"},\n{\"content\": \"Eighty percent of success is showing up.\", \"author\": \"Woody Allen\"},\n{\"content\": \"Your time is limited, so don’t waste it living someone else’s life.\", \"author\": \"Steve Jobs\"},\n{\"content\": \"The only way to do great work is to love what you do.\", \"author\": \"Steve Jobs\"},\n]\n\nif the quote has no author and is widely known write the author as unknown and if the quote is plagiarism free then author should be the.verse.weaver",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "Okay, I'm ready to weave some quote magic!  Just say \"**bazinga**\" and I'll create a reel-ready quote poster for @the.verse.weaver. ✨ \n",
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "bazinga\n",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "## \"The best time to plant a tree was 20 years ago. The second best time is now.\" \n\n- *Chinese Proverb*\n\n@the.verse.weaver \n\n(Image:  Choose an image related to nature, growth, or opportunity) \n",
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "bazinga\n",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "##  \"An unexamined life is not worth living.\"\n\n- *Socrates*\n\n@the.verse.weaver\n\n(Image: A thought-provoking image like a person deep in thought, a labyrinth, or a mirror) \n",
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "dont use my quotes but generate by yourself\n",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "Understood!  From now on, I'll be crafting original quotes for @the.verse.weaver.  \n\nHit me with that \"**bazinga**\" whenever you're ready for a fresh dose of inspiration. ✨ \n",
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "bazinga\n",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "##  \"The universe whispers in possibilities, it's up to you to shout back with action.\"\n\n- @the.verse.weaver\n\n(Image:  A striking image of a person shouting towards a vast starry sky, a hand reaching out to touch a galaxy, or something similarly inspiring) \n",
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "remove that image suggestion or whatever\n",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "Okay, I'll leave the image suggestions out. Just the quote from now on!\n\nLet me know when you're ready for another quote with \"bazinga\".  💫 \n",
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "bazinga\n",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "## \"Let your stumbles be stepping stones, your doubts be fuel for courage, and your scars be reminders of battles won.\"\n\n- @the.verse.weaver \n",
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "Whenever I'll write \"**cabinza**\" your task is to give 15 to 20 most relatable quote and reel hashtags related to content which may be motivation, poetry, success logic or any related general content and if its content is not clear add general reel and most trending hashtags. \n",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "Okay, I'm ready to generate the quote related hashtags! Just say \"**cabinza**\" and I'll add all most trending quote hashtags for @the.verse.weaver. ✨ \n",
+      ],
+    },
+  ]
+)
+
+def generate_tts_audio(text, output_file):
+    """Generate TTS audio using Edge-TTS."""
+    communicate = edge_tts.Communicate(text, voice='en-US-BrianNeural', output_format='audio-16khz-32bit-mono-pcm')
+    with open(output_file, 'wb') as audio_file:
+        await communicate.save(audio_file)
+
+def generate_hashtags():
+    response = chat_session2.send_message("cabinza")
+    hashtags_text = response.text.strip()
+    return hashtags_text
+    
 def generate_quote():
     response = chat_session2.send_message("bazinga")
     quote_text = response.text.strip()
@@ -179,7 +291,6 @@ def generate_quote():
     return quote
 
 async def create_and_post_reel(client):
-    # Create the image video
     image_video = create_image_video(images_folder, num_images, time_per_image, video_size)
 
     # Generate a quote using Gemini
@@ -211,9 +322,8 @@ async def create_and_post_reel(client):
     final_video.write_videofile(output_video, fps=24)
 
     # Post the reel using instagrapi
-    hashtags = await generate_hashtags()  # Get hashtags
-    caption = f"✨✨ @the.verse.weaver\n{hashtags}"  # Include hashtags in the caption
-    client.clip_upload(Path(output_video), caption) 
+    caption = f"✨✨ @the.verse.weaver\n{generate_hashtags()}"
+    client.clip_upload(Path(output_video), caption)
 
 if __name__ == "__main__":
     user_name = os.getenv('INSTAGRAM_USERNAME')
