@@ -13,6 +13,7 @@ from tools import create_image_video, create_text_video
 from moviepy.editor import CompositeVideoClip, AudioFileClip
 from pathlib import Path
 import edge_tts
+import uuid  # Import uuid to generate unique filenames
 
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
@@ -270,11 +271,14 @@ chat_session2 = model.start_chat(
   ]
 )
 
-async def generate_tts_audio(text, output_file):
-    """Generate TTS audio using Edge-TTS."""
+
+async def generate_tts_audio(text):
+    """Generate TTS audio using Edge-TTS with a unique filename."""
+    unique_filename = f"quote_audio_{uuid.uuid4()}.wav"  # Create a unique filename
     communicate = edge_tts.Communicate(text, voice='en-US-BrianNeural', output_format='audio-16khz-32bit-mono-pcm')
-    with open(output_file, 'wb') as audio_file:
+    with open(unique_filename, 'wb') as audio_file:
         await communicate.save(audio_file)
+    return unique_filename  # Return the unique filename
 
 def generate_hashtags():
     response = chat_session2.send_message("cabinza")
@@ -321,21 +325,10 @@ async def create_and_post_reel(client):
     # Write the final video to a file
     final_video.write_videofile(output_video, fps=24)'''
     text_clip = text_clip.set_position(("center", "center"), relative=True).set_duration(image_video.duration)
-
-    # Generate TTS audio for the quote
-    tts_audio_file = "quote_audio.wav"
-    generate_tts_audio(quote['content'], tts_audio_file)
-
-    # Load the TTS audio file
+    tts_audio_file = await generate_tts_audio(quote['content'])
     audio_clip = AudioFileClip(tts_audio_file)
-
-    # Set the audio for the final video
     final_video = CompositeVideoClip([image_video, text_clip]).set_audio(audio_clip)
-
-    # Write the final video to a file
     final_video.write_videofile(output_video, fps=24)
-
-    # Post the reel using instagrapi
     caption = f"✨✨ @the.verse.weaver\n{generate_hashtags()}"
     client.clip_upload(Path(output_video), caption)
 
