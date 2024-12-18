@@ -258,7 +258,7 @@ chat_session2 = model.start_chat(
     {
       "role": "user",
       "parts": [
-        "Whenever I'll write \"**cabinza**\" your task is to give 15 to 20 most relatable quote and reel hashtags related to content which may be motivation, poetry, success logic or any related general content and if its content is not clear add general reel and most trending hashtags. \n",
+        "Whenever I'll write \"**cabinza**\" your task is to give 15 to 20 most relatable quote and reel hashtags related to content which may be motivation, poetry, success logic or any related general content and if its content is not clear add general reel and most trending hashtags and only hashtags without any comment text and text formatting.\n",
       ],
     },
     {
@@ -302,7 +302,7 @@ async def create_and_post_reel(client):
                                    fontsize_quote, fontsize_author, fontsize_watermark, 
                                    margin_between_quote_and_author, username)
 
-    text_clip = text_clip.set_position(("center", "center"), relative=True).set_duration(image_video.duration)
+    '''text_clip = text_clip.set_position(("center", "center"), relative=True).set_duration(image_video.duration)
 
     # Combine the image video with the text video
     final_video = CompositeVideoClip([image_video, text_clip])
@@ -317,6 +317,20 @@ async def create_and_post_reel(client):
 
     # Set the audio for the final video
     final_video = final_video.set_audio(audio_clip)
+
+    # Write the final video to a file
+    final_video.write_videofile(output_video, fps=24)'''
+    text_clip = text_clip.set_position(("center", "center"), relative=True).set_duration(image_video.duration)
+
+    # Generate TTS audio for the quote
+    tts_audio_file = "quote_audio.wav"
+    generate_tts_audio(quote['content'], tts_audio_file)
+
+    # Load the TTS audio file
+    audio_clip = AudioFileClip(tts_audio_file)
+
+    # Set the audio for the final video
+    final_video = CompositeVideoClip([image_video, text_clip]).set_audio(audio_clip)
 
     # Write the final video to a file
     final_video.write_videofile(output_video, fps=24)
